@@ -5,6 +5,8 @@ services:
     command: sleep infinity
     volumes:
       - root-node-volume:/workspace/node_modules
+      - frontend-node-volume:/workspace/frontend/node_modules
       - ../:/workspace
 volumes:
   root-node-volume:
+  frontend-node-volume:
