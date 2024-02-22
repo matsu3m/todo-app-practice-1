@@ -61,6 +61,7 @@
         "workbench.tree.indent": 25,
 
         "black-formatter.args": ["--line-length", "120"],
+        "python.analysis.extraPaths": ["backend"],
         "python.analysis.typeCheckingMode": "basic",
         "python.defaultInterpreterPath": "backend/.venv/bin/python"
       }
