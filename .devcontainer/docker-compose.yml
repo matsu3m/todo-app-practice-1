@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  workspace:
+    image: "mcr.microsoft.com/vscode/devcontainers/base:bullseye"
+    command: sleep infinity
+    volumes:
+      - root-node-volume:/workspace/node_modules
+      - ../:/workspace
+volumes:
+  root-node-volume:

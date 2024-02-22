@@ -1,0 +1,7 @@
+{
+  "name": "todo-app-practice-1",
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "1.5.3"
+  }
+}

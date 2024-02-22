@@ -1,0 +1,44 @@
+{
+  "name": "todo-app-practice-1",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20.11.1"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12.2"
+    },
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {
+      "version": "1.7.1"
+    }
+  },
+  "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "eamodio.gitlens",
+        "editorconfig.editorconfig",
+        "ms-azuretools.vscode-docker",
+        "streetsidesoftware.code-spell-checker"
+      ],
+      "settings": {
+        "[json]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "editor.codeActionsOnSave": {
+          "quickFix": "always",
+          "source.fixAll": "always"
+        },
+        "editor.formatOnSave": true,
+        "editor.renderWhitespace": "all",
+        "workbench.tree.indent": 25
+      }
+    }
+  }
+}
