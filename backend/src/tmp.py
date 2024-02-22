@@ -1,3 +1,0 @@
-def tmp():
-
-    return True
