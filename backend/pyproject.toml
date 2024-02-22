@@ -46,4 +46,5 @@ output = ".pytest_cache/coverage.xml"
 [tool.poe.tasks]
 fmt = "black src tests --check"
 lint = "ruff check src tests"
+test = "pytest --junitxml=./.pytest_cache/pytest.xml --cov --cov-report xml"
 dev = "uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload"
