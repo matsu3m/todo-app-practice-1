@@ -1,5 +1,7 @@
+import { Heading } from "@chakra-ui/react";
+
 const App = () => {
-  return <h1>ToDo app</h1>;
+  return <Heading>ToDo app</Heading>;
 };
 
 export default App;
