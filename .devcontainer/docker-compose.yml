@@ -19,6 +19,10 @@ services:
     image: "amazon/dynamodb-local"
     ports:
       - "8001:8000"
+  dynamodb-test:
+    image: "amazon/dynamodb-local"
+    ports:
+      - "8002:8000"
 volumes:
   root-node-volume:
   frontend-node-volume:
