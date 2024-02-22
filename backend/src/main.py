@@ -17,3 +17,7 @@ def get_all_todo_items(db_client: DynamoDBClient = Depends(get_db_client), setti
     response = db_client.scan(TableName=settings.table_name)
     items = response.get("Items", [])
     return deserialize_items(items)
+
+
+def print_openapi_spec():
+    print(app.openapi())
