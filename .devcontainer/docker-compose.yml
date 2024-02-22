@@ -15,6 +15,7 @@ services:
       - ../:/workspace
     depends_on:
       - dynamodb-dev
+      - dynamodb-test
   dynamodb-dev:
     image: "amazon/dynamodb-local"
     ports:
