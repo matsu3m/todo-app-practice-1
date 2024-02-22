@@ -6,7 +6,9 @@ services:
     volumes:
       - root-node-volume:/workspace/node_modules
       - frontend-node-volume:/workspace/frontend/node_modules
+      - backend-venv-volume:/workspace/backend/.venv
       - ../:/workspace
 volumes:
   root-node-volume:
   frontend-node-volume:
+  backend-venv-volume:

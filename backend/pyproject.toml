@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "todo-app-practice-1-backend"
+description = ""
+authors = ["Mao Matsumoto"]
+version = "0.1.0"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+[tool.poetry.group.dev.dependencies]
+black = "24.2.0"
+poethepoet = "0.24.4"
+ruff = "0.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 120
+
+[tool.black]
+line-length = 120
+
+[tool.poe.tasks]
+fmt = "black src tests --check"
+lint = "ruff check src tests"
+

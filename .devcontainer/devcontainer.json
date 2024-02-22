@@ -19,9 +19,13 @@
     "vscode": {
       "extensions": [
         "biomejs.biome",
+        "charliermarsh.ruff",
         "eamodio.gitlens",
         "editorconfig.editorconfig",
+        "KevinRose.vsc-python-indent",
         "ms-azuretools.vscode-docker",
+        "ms-python.black-formatter",
+        "njpwerner.autodocstring",
         "streetsidesoftware.code-spell-checker"
       ],
       "settings": {
@@ -43,13 +47,22 @@
         "[typescriptreact]": {
           "editor.defaultFormatter": "biomejs.biome"
         },
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        },
         "editor.codeActionsOnSave": {
           "quickFix": "always",
-          "source.fixAll": "always"
+          "source.addMissingImports": "always",
+          "source.fixAll": "always",
+          "source.organizeImports": "always"
         },
         "editor.formatOnSave": true,
         "editor.renderWhitespace": "all",
-        "workbench.tree.indent": 25
+        "workbench.tree.indent": 25,
+
+        "black-formatter.args": ["--line-length", "120"],
+        "python.analysis.typeCheckingMode": "basic",
+        "python.defaultInterpreterPath": "backend/.venv/bin/python"
       }
     }
   }
