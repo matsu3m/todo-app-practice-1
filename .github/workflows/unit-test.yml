@@ -1,0 +1,58 @@
+name: Unit test
+
+on:
+  push:
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+
+    container:
+      image: python:3.12.2-slim-bullseye
+
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      dynamodb-test:
+        image: "amazon/dynamodb-local"
+        ports:
+          - "8000:8000"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install poetry
+        run: |
+          pip install --upgrade pip
+          pip install poetry
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Run formatter
+        run: |
+          poetry run poe fmt
+
+      - name: Run linter
+        run: |
+          poetry run poe lint
+
+      - name: Set environment variables
+        run: |
+          echo "AWS_ACCESS_KEY_ID=dummy" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=dummy" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=ap-northeast-1" >> $GITHUB_ENV
+
+      - name: Run unit test
+        run: |
+          poetry run poe test
+
+      - name: Post pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@v1.1.51
+        with:
+          pytest-xml-coverage-path: backend/.pytest_cache/coverage.xml
+          junitxml-path: backend/.pytest_cache/pytest.xml

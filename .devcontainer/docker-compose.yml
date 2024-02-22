@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  workspace:
+    image: "mcr.microsoft.com/vscode/devcontainers/base:bullseye"
+    command: sleep infinity
+    environment:
+      AWS_ACCESS_KEY_ID: "dummy"
+      AWS_SECRET_ACCESS_KEY: "dummy"
+      AWS_DEFAULT_REGION: "dummy"
+      AWS_PAGER: ""
+    volumes:
+      - root-node-volume:/workspace/node_modules
+      - frontend-node-volume:/workspace/frontend/node_modules
+      - backend-venv-volume:/workspace/backend/.venv
+      - ../:/workspace
+    depends_on:
+      - dynamodb-dev
+      - dynamodb-test
+  dynamodb-dev:
+    image: "amazon/dynamodb-local"
+    ports:
+      - "8001:8000"
+  dynamodb-test:
+    image: "amazon/dynamodb-local"
+    ports:
+      - "8002:8000"
+volumes:
+  root-node-volume:
+  frontend-node-volume:
+  backend-venv-volume:

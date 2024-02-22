@@ -1,0 +1,70 @@
+{
+  "name": "todo-app-practice-1",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "workspace",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20.11.1"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.12.2"
+    },
+    "ghcr.io/devcontainers-contrib/features/poetry:2": {
+      "version": "1.7.1"
+    }
+  },
+  "postCreateCommand": "./.devcontainer/postCreateCommand.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "charliermarsh.ruff",
+        "eamodio.gitlens",
+        "editorconfig.editorconfig",
+        "KevinRose.vsc-python-indent",
+        "ms-azuretools.vscode-docker",
+        "ms-python.black-formatter",
+        "njpwerner.autodocstring",
+        "streetsidesoftware.code-spell-checker"
+      ],
+      "settings": {
+        "[javascript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[javascriptreact]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "biomejs.biome"
+        },
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        },
+        "editor.codeActionsOnSave": {
+          "quickFix": "always",
+          "source.addMissingImports": "always",
+          "source.fixAll": "always",
+          "source.organizeImports": "always"
+        },
+        "editor.formatOnSave": true,
+        "editor.renderWhitespace": "all",
+        "workbench.tree.indent": 25,
+
+        "black-formatter.args": ["--line-length", "120"],
+        "python.analysis.extraPaths": ["backend"],
+        "python.analysis.typeCheckingMode": "basic",
+        "python.defaultInterpreterPath": "backend/.venv/bin/python"
+      }
+    }
+  }
+}
