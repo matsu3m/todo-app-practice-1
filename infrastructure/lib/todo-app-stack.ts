@@ -1,5 +1,13 @@
+import { CloudFrontToS3 } from "@aws-solutions-constructs/aws-cloudfront-s3";
 import * as cdk from "aws-cdk-lib";
-import { aws_apigateway, aws_dynamodb, aws_lambda } from "aws-cdk-lib";
+import {
+  aws_apigateway,
+  aws_cloudfront,
+  aws_cloudfront_origins,
+  aws_dynamodb,
+  aws_lambda,
+  aws_s3_deployment,
+} from "aws-cdk-lib";
 
 export class ToDoAppStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -27,5 +35,30 @@ export class ToDoAppStack extends cdk.Stack {
 
     const resource = apiGateway.root.addResource("{proxy+}");
     resource.addMethod("ANY", lambdaIntegration);
+
+    const additionalBehaviors: aws_cloudfront.BehaviorOptions = {
+      origin: new aws_cloudfront_origins.RestApiOrigin(apiGateway, { originPath: "" }),
+      allowedMethods: aws_cloudfront.AllowedMethods.ALLOW_ALL,
+      cachePolicy: aws_cloudfront.CachePolicy.CACHING_DISABLED,
+      viewerProtocolPolicy: aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+    };
+
+    // L2 が OAC 未対応で冗長になるため　AWS Solutions Constructs　を利用
+    const { cloudFrontWebDistribution, s3Bucket } = new CloudFrontToS3(this, "CloudFrontToS3", {
+      cloudFrontDistributionProps: {
+        additionalBehaviors: { "/api/*": additionalBehaviors },
+      },
+      insertHttpSecurityHeaders: false,
+    });
+
+    if (s3Bucket === undefined) {
+      throw new Error("S3Bucket is undefined");
+    }
+
+    new aws_s3_deployment.BucketDeployment(this, "BucketDeployment", {
+      sources: [aws_s3_deployment.Source.asset("../frontend/dist")], // 事前にビルドが必要
+      destinationBucket: s3Bucket,
+      distribution: cloudFrontWebDistribution,
+    });
   }
 }
