@@ -1,8 +1,8 @@
 import { App, CfnOutput, Stack, StackProps } from "aws-cdk-lib";
-import { AuthLambda } from "../constructures/auth-lambda";
-import { BackendApi } from "../constructures/backend-api";
-import { DbTable } from "../constructures/db-table";
-import { FrontendCdn } from "../constructures/frontend-cdn";
+import { AuthLambda } from "../constructs/auth-lambda";
+import { BackendApi } from "../constructs/backend-api";
+import { DbTable } from "../constructs/db-table";
+import { FrontendCdn } from "../constructs/frontend-cdn";
 
 export class ToDoAppStack extends Stack {
   constructor(scope: App, id: string, props?: StackProps) {

@@ -1,5 +1,5 @@
 import { App, CfnOutput, Stack, StackProps } from "aws-cdk-lib";
-import { AuthCognito } from "../constructures/auth-cognito";
+import { AuthCognito } from "../constructs/auth-cognito";
 
 type Props = StackProps & {
   callbackUrlDomain: string;
