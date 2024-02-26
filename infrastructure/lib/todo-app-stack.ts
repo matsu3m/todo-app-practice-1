@@ -8,10 +8,22 @@ import {
   aws_lambda,
   aws_s3_deployment,
 } from "aws-cdk-lib";
+import { calculateHashOfDirectory } from "../utils/hash";
 
 export class ToDoAppStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const lambdaEdge = new aws_lambda.Function(this, "LambdaEdge", {
+      handler: "index.handler",
+      runtime: aws_lambda.Runtime.NODEJS_20_X,
+      code: aws_lambda.Code.fromAsset("../auth"),
+    });
+
+    const lambdaEdgeVersion = new aws_lambda.Version(this, "LambdaEdgeVersion", {
+      lambda: lambdaEdge,
+      description: calculateHashOfDirectory("../auth"),
+    });
 
     const table = new aws_dynamodb.Table(this, "Table", {
       partitionKey: { name: "id", type: aws_dynamodb.AttributeType.STRING },
@@ -41,12 +53,26 @@ export class ToDoAppStack extends cdk.Stack {
       allowedMethods: aws_cloudfront.AllowedMethods.ALLOW_ALL,
       cachePolicy: aws_cloudfront.CachePolicy.CACHING_DISABLED,
       viewerProtocolPolicy: aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+      edgeLambdas: [
+        {
+          functionVersion: lambdaEdgeVersion,
+          eventType: aws_cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
+        },
+      ],
     };
 
     // L2 が OAC 未対応で冗長になるため　AWS Solutions Constructs　を利用
     const { cloudFrontWebDistribution, s3Bucket } = new CloudFrontToS3(this, "CloudFrontToS3", {
       cloudFrontDistributionProps: {
         additionalBehaviors: { "/api/*": additionalBehaviors },
+        defaultBehavior: {
+          edgeLambdas: [
+            {
+              functionVersion: lambdaEdgeVersion,
+              eventType: aws_cloudfront.LambdaEdgeEventType.VIEWER_REQUEST,
+            },
+          ],
+        },
       },
       insertHttpSecurityHeaders: false,
     });
@@ -59,6 +85,11 @@ export class ToDoAppStack extends cdk.Stack {
       sources: [aws_s3_deployment.Source.asset("../frontend/dist")], // 事前にビルドが必要
       destinationBucket: s3Bucket,
       distribution: cloudFrontWebDistribution,
+    });
+
+    new cdk.CfnOutput(this, "CloudFrontDomainName", {
+      value: cloudFrontWebDistribution.distributionDomainName,
+      exportName: "CloudFrontDomainName",
     });
   }
 }
