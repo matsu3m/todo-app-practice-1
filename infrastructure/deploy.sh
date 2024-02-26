@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd ../frontend
+npm install
 npm run build
 cd ../infrastructure
 
@@ -27,22 +28,27 @@ USER_POOL_ID=$(aws cloudformation describe-stacks \
   --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolId'].OutputValue" \
   --output text)
+
 USER_POOL_CLIENT_ID=$(aws cloudformation describe-stacks \
   --stack-name CognitoStack \
   --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolClientId'].OutputValue" \
   --output text)
+
 USER_POOL_DOMAIN=$(aws cloudformation describe-stacks \
   --stack-name CognitoStack \
   --region us-east-1 \
   --query "Stacks[0].Outputs[?OutputKey=='CognitoUserPoolDomainName'].OutputValue" \
   --output text)
+
 cd ../auth
+
 sed \
   -e "s/{{ UserPoolId }}/$USER_POOL_ID/g" \
   -e "s/{{ UserPoolClientId }}/$USER_POOL_CLIENT_ID/g" \
   -e "s/{{ UserPoolDomain }}/$USER_POOL_DOMAIN/g" \
   ./index.template.js > ./index.js
+
 cd ../infrastructure
 
 npx cdk deploy ToDoAppStack --require-approval never

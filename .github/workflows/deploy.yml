@@ -1,4 +1,4 @@
-name: Unit test
+name: Deploy
 
 on:
   push:
@@ -56,3 +56,36 @@ jobs:
         with:
           pytest-xml-coverage-path: backend/.pytest_cache/coverage.xml
           junitxml-path: backend/.pytest_cache/pytest.xml
+
+  deploy:
+    needs: unit-test
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: infrastructure
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy
+        run: |
+          bash deploy.sh
