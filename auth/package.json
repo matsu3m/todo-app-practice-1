@@ -1,0 +1,8 @@
+{
+  "name": "todo-app-practice-1-auth",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "cognito-at-edge": "1.5.0"
+  }
+}

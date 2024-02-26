@@ -1,4 +1,5 @@
 from fastapi import Depends, FastAPI
+from mangum import Mangum
 from mypy_boto3_dynamodb.client import DynamoDBClient
 
 from src.config import Settings, get_settings
@@ -17,6 +18,9 @@ def get_all_todo_items(db_client: DynamoDBClient = Depends(get_db_client), setti
     response = db_client.scan(TableName=settings.table_name)
     items = response.get("Items", [])
     return deserialize_items(items)
+
+
+handler = Mangum(app, lifespan="off")
 
 
 def print_openapi_spec():
