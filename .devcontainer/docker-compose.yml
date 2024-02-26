@@ -12,6 +12,7 @@ services:
       - root-node-volume:/workspace/node_modules
       - frontend-node-volume:/workspace/frontend/node_modules
       - infrastructure-node-volume:/workspace/infrastructure/node_modules
+      - auth-node-volume:/workspace/auth/node_modules
       - backend-venv-volume:/workspace/backend/.venv
       - ../:/workspace
     depends_on:
@@ -29,4 +30,5 @@ volumes:
   root-node-volume:
   frontend-node-volume:
   infrastructure-node-volume:
+  auth-node-volume:
   backend-venv-volume:

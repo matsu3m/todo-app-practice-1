@@ -45,7 +45,7 @@ jobs:
         run: |
           echo "AWS_ACCESS_KEY_ID=dummy" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=dummy" >> $GITHUB_ENV
-          echo "AWS_DEFAULT_REGION=ap-northeast-1" >> $GITHUB_ENV
+          echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
 
       - name: Run unit test
         run: |
