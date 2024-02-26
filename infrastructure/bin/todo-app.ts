@@ -1,14 +1,13 @@
-#!/usr/bin/env node
-import * as cdk from "aws-cdk-lib";
+import { App } from "aws-cdk-lib";
 import "source-map-support/register";
-import { CognitoStack } from "../lib/cognito-stack";
-import { ToDoAppStack } from "../lib/todo-app-stack";
+import { CognitoStack } from "../lib/stacks/cognito-stack";
+import { ToDoAppStack } from "../lib/stacks/todo-app-stack";
 
-const app = new cdk.App();
+const app = new App();
 
 new CognitoStack(app, "CognitoStack", {
   env: { region: "us-east-1" },
-  callbackUrl: app.node.tryGetContext("callbackUrl"),
+  callbackUrlDomain: app.node.tryGetContext("CognitoCallbackUrlDomain"),
 });
 
 new ToDoAppStack(app, "ToDoAppStack", {
