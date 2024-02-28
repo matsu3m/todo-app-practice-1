@@ -66,7 +66,7 @@ class TestGetAllTodos:
                 "title": "ToDo 2",
                 "description": "Description 2",
                 "dueDate": "2023-01-02",
-                "status": "in_progress",
+                "status": "inProgress",
             },
             {
                 "id": "3",
@@ -131,7 +131,7 @@ class TestUpdateTodo:
             "title": "Updated ToDo",
             "description": "Updated Description",
             "dueDate": "2023-01-01",
-            "status": "in_progress",
+            "status": "inProgress",
         }
 
         response = client.put("/todos/1", json=request_payload)
