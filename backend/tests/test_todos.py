@@ -45,15 +45,15 @@ def add_todo_item(id: str, title: str, description: str, due_date: str, status: 
             "id": {"S": id},
             "title": {"S": title},
             "description": {"S": description},
-            "dueDate": {"S": due_date},
+            "due_date": {"S": due_date},
             "status": {"S": status},
         },
     )
 
 
 class TestGetAllTodos:
-    def 全てのToDoが取得される(self):
-        test_data = [
+    def test_全てのToDoが取得される(self):
+        expected_response_payload = [
             {
                 "id": "1",
                 "title": "ToDo 1",
@@ -84,11 +84,31 @@ class TestGetAllTodos:
             },
         ]
 
-        for item in test_data:
+        for item in expected_response_payload:
             add_todo_item(item["id"], item["title"], item["description"], item["dueDate"], item["status"])
 
         response = client.get("/todos")
-        todos = response.json()
+        response_payload = response.json()
 
         assert response.status_code == 200
-        assert len(todos) == 4
+        assert len(response_payload) == 4
+
+
+class TestCreateToDo:
+    def test_ToDoが1件追加される(self):
+        request_payload = {
+            "title": "New ToDo",
+            "description": "New Description",
+            "dueDate": "2023-01-01",
+            "status": "backlog",
+        }
+
+        response = client.post("/todos", json=request_payload)
+        response_payload = response.json()
+
+        inserted_todo = test_db_client.get_item(TableName=table_name, Key={"id": {"S": response_payload["id"]}}).get(
+            "Item"
+        )
+
+        assert response.status_code == 201
+        assert request_payload["title"] == response_payload["title"] == inserted_todo.get("title", {}).get("S", "")
