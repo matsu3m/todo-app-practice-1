@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { todoStatuses } from "../../constants";
 import { ToDo } from "../../types";
+import DeleteModal from "./DeleteModal";
 
 type Props = {
   isOpen: boolean;
@@ -67,6 +68,7 @@ const EditModal = ({ isOpen, onClose, todo, setTodos }: Props) => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
+          <DeleteModal todoId={todo.id} setTodos={setTodos} />
           <ModalCloseButton />
           <form onSubmit={handleSubmit(createToDo)}>
             <ModalBody>
