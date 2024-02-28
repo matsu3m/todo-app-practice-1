@@ -18,8 +18,15 @@ class ToDoRead(BaseSchema):
 
 class ToDoCreate(BaseSchema):
     title: str = Field(description="todo のタイトル")
-    description: str = Field(default="", description="todo の詳細")
-    due_date: str = Field(default="", description="todo の期日")
+    description: str = Field("", description="todo の詳細")
+    due_date: str = Field("", description="todo の期日")
     status: Literal["backlog", "upcoming", "in_progress", "completed"] = Field(
-        default="backlog", description="todo のステータス"
+        "backlog", description="todo のステータス"
     )
+
+
+class ToDoUpdate(BaseSchema):
+    title: str = Field(description="todo のタイトル")
+    description: str = Field(description="todo の詳細")
+    due_date: str = Field(description="todo の期日")
+    status: Literal["backlog", "upcoming", "in_progress", "completed"] = Field(description="todo のステータス")
