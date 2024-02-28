@@ -112,3 +112,13 @@ class TestCreateToDo:
 
         assert response.status_code == 201
         assert request_payload["title"] == response_payload["title"] == inserted_todo.get("title", {}).get("S", "")
+
+
+class TestDeleteToDo:
+    def test_ToDoが1件削除される(self):
+        add_todo_item("1", "ToDo 1", "Description 1", "2023-01-01", "completed")
+
+        response = client.delete("/todos/1")
+
+        assert response.status_code == 204
+        assert test_db_client.get_item(TableName=table_name, Key={"id": {"S": "1"}}).get("Item") is None
