@@ -28,6 +28,7 @@ const ToDoPage = () => {
             statusId={statusId}
             statusDisplayName={statusDisplayName}
             todos={todos.filter((todo) => todo.status === statusId)}
+            setTodos={setTodos}
           />
         ))}
       </Flex>

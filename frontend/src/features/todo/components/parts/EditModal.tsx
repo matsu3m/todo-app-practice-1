@@ -10,12 +10,10 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Select,
   Spacer,
   Textarea,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -23,6 +21,9 @@ import { todoStatuses } from "../../constants";
 import { ToDo } from "../../types";
 
 type Props = {
+  isOpen: boolean;
+  onClose: () => void;
+  todo: ToDo;
   setTodos: React.Dispatch<React.SetStateAction<ToDo[]>>;
 };
 
@@ -33,8 +34,7 @@ type FormData = {
   status: string;
 };
 
-const CreateModal = ({ setTodos }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const EditModal = ({ isOpen, onClose, todo, setTodos }: Props) => {
   const {
     register,
     handleSubmit,
@@ -43,16 +43,16 @@ const CreateModal = ({ setTodos }: Props) => {
   } = useForm<FormData>();
 
   const createToDo = async (data: FormData) => {
-    const response = await fetch("/api/todos/", {
-      method: "POST",
+    const response = await fetch(`/api/todos/${todo.id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
-    const newTodo = await response.json();
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
+    const updatedTodo = await response.json();
+    setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)));
     onClose();
   };
 
@@ -64,12 +64,9 @@ const CreateModal = ({ setTodos }: Props) => {
 
   return (
     <>
-      <Button onClick={onOpen}>＋ 追加</Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>ToDo の作成</ModalHeader>
           <ModalCloseButton />
           <form onSubmit={handleSubmit(createToDo)}>
             <ModalBody>
@@ -78,6 +75,7 @@ const CreateModal = ({ setTodos }: Props) => {
                   タイトル <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <Input
+                  defaultValue={todo.title}
                   {...register("title", {
                     required: "必須項目です",
                   })}
@@ -89,7 +87,7 @@ const CreateModal = ({ setTodos }: Props) => {
 
               <FormControl isInvalid={!!errors.description}>
                 <FormLabel>内容</FormLabel>
-                <Textarea {...register("description")} />
+                <Textarea defaultValue={todo.description} {...register("description")} />
                 <FormErrorMessage>{errors.description?.message?.toString()}</FormErrorMessage>
               </FormControl>
 
@@ -97,7 +95,7 @@ const CreateModal = ({ setTodos }: Props) => {
 
               <FormControl isInvalid={!!errors.dueDate}>
                 <FormLabel>期限</FormLabel>
-                <Input type="date" {...register("dueDate")} />
+                <Input type="date" defaultValue={todo.dueDate} {...register("dueDate")} />
                 <FormErrorMessage>{errors.dueDate?.message?.toString()}</FormErrorMessage>
               </FormControl>
 
@@ -108,6 +106,7 @@ const CreateModal = ({ setTodos }: Props) => {
                   ステータス <span style={{ color: "red" }}>*</span>
                 </FormLabel>
                 <Select
+                  defaultValue={todo.status}
                   {...register("status", {
                     required: "必須項目です",
                   })}
@@ -125,7 +124,7 @@ const CreateModal = ({ setTodos }: Props) => {
             <ModalFooter>
               <HStack spacing={3}>
                 <Button isLoading={isSubmitting} type="submit">
-                  タスクを作成
+                  更新
                 </Button>
               </HStack>
             </ModalFooter>
@@ -136,4 +135,4 @@ const CreateModal = ({ setTodos }: Props) => {
   );
 };
 
-export default CreateModal;
+export default EditModal;
