@@ -1,23 +1,23 @@
-from fastapi import Depends, FastAPI
+from fastapi import FastAPI
 from mangum import Mangum
-from mypy_boto3_dynamodb.client import DynamoDBClient
 
-from src.config import Settings, get_settings
-from src.database import deserialize_items, get_db_client
+from src.core.config import get_settings
+from src.todo.routers import todo_router
 
-app = FastAPI()
+settings = get_settings()
+
+if settings == "prod":
+    app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
+else:
+    app = FastAPI()
+
+
+app.include_router(todo_router)
 
 
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
-
-
-@app.get("/todos")
-def get_all_todo_items(db_client: DynamoDBClient = Depends(get_db_client), settings: Settings = Depends(get_settings)):
-    response = db_client.scan(TableName=settings.table_name)
-    items = response.get("Items", [])
-    return deserialize_items(items)
 
 
 handler = Mangum(app, lifespan="off")

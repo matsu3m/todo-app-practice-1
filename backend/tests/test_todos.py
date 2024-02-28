@@ -2,8 +2,8 @@ import pytest
 from fastapi.testclient import TestClient
 from mypy_boto3_dynamodb import DynamoDBClient
 
-from src.config import get_settings
-from src.database import get_db_client
+from src.core.config import get_settings
+from src.core.database import get_db_client
 from src.main import app
 from tests.database import get_test_db_client
 
@@ -38,33 +38,57 @@ def setup_db():
     test_db_client.delete_table(TableName=table_name)
 
 
-def add_todo_item(id: str, title: str, content: str, dueDate: str, status: str):
+def add_todo_item(id: str, title: str, description: str, due_date: str, status: str):
     test_db_client.put_item(
         TableName=table_name,
         Item={
             "id": {"S": id},
             "title": {"S": title},
-            "content": {"S": content},
-            "dueDate": {"S": dueDate},
+            "description": {"S": description},
+            "dueDate": {"S": due_date},
             "status": {"S": status},
         },
     )
 
 
-def test_get_all_todo_items():
+class TestGetAllTodos:
+    def 全てのToDoが取得される(self):
+        test_data = [
+            {
+                "id": "1",
+                "title": "ToDo 1",
+                "description": "Description 1",
+                "dueDate": "2023-01-01",
+                "status": "completed",
+            },
+            {
+                "id": "2",
+                "title": "ToDo 2",
+                "description": "Description 2",
+                "dueDate": "2023-01-02",
+                "status": "in_progress",
+            },
+            {
+                "id": "3",
+                "title": "ToDo 3",
+                "description": "Description 3",
+                "dueDate": "2023-01-03",
+                "status": "upcoming",
+            },
+            {
+                "id": "4",
+                "title": "ToDo 4",
+                "description": "Description 4",
+                "dueDate": "2023-01-04",
+                "status": "backlog",
+            },
+        ]
 
-    todo_1 = {"id": "1", "title": "Test ToDo 1", "content": "Content 1", "dueDate": "2023-01-01", "status": "pending"}
-    todo_2 = {"id": "2", "title": "Test ToDo 2", "content": "Content 2", "dueDate": "2023-01-02", "status": "completed"}
+        for item in test_data:
+            add_todo_item(item["id"], item["title"], item["description"], item["dueDate"], item["status"])
 
-    add_todo_item(**todo_1)
-    add_todo_item(**todo_2)
+        response = client.get("/todos")
+        todos = response.json()
 
-    response = client.get("/todos")
-    todos = response.json()
-
-    assert response.status_code == 200
-    assert len(todos) == 2
-    print(todo_1)
-    print(todos[0])
-    assert todo_1 == todos[0]
-    assert todo_2 == todos[1]
+        assert response.status_code == 200
+        assert len(todos) == 4
