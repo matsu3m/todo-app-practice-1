@@ -112,6 +112,44 @@ class TestCreateToDo:
 
         assert response.status_code == 201
         assert request_payload["title"] == response_payload["title"] == inserted_todo.get("title", {}).get("S", "")
+        assert (
+            request_payload["description"]
+            == response_payload["description"]
+            == inserted_todo.get("description", {}).get("S", "")
+        )
+        assert (
+            request_payload["dueDate"] == response_payload["dueDate"] == inserted_todo.get("due_date", {}).get("S", "")
+        )
+        assert request_payload["status"] == response_payload["status"] == inserted_todo.get("status", {}).get("S", "")
+
+
+class TestUpdateTodo:
+    def test_ToDoが1件更新される(self):
+        add_todo_item("1", "ToDo 1", "Description 1", "2023-01-01", "completed")
+
+        request_payload = {
+            "title": "Updated ToDo",
+            "description": "Updated Description",
+            "dueDate": "2023-01-01",
+            "status": "in_progress",
+        }
+
+        response = client.put("/todos/1", json=request_payload)
+        response_payload = response.json()
+
+        updated_todo = test_db_client.get_item(TableName=table_name, Key={"id": {"S": "1"}}).get("Item")
+
+        assert response.status_code == 200
+        assert request_payload["title"] == response_payload["title"] == updated_todo.get("title", {}).get("S", "")
+        assert (
+            request_payload["description"]
+            == response_payload["description"]
+            == updated_todo.get("description", {}).get("S", "")
+        )
+        assert (
+            request_payload["dueDate"] == response_payload["dueDate"] == updated_todo.get("due_date", {}).get("S", "")
+        )
+        assert request_payload["status"] == response_payload["status"] == updated_todo.get("status", {}).get("S", "")
 
 
 class TestDeleteToDo:

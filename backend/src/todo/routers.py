@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends, status
 
-from src.todo.models import ToDoCreate, ToDoRead
+from src.todo.models import ToDoCreate, ToDoRead, ToDoUpdate
 from src.todo.repositories import ToDoRepository
 
 todo_router = APIRouter(prefix="/todos")
@@ -20,9 +20,16 @@ def get_all_todos(repository: ToDoRepository = Depends(ToDoRepository)):
     "/", response_model=ToDoRead, status_code=status.HTTP_201_CREATED, description="新しい ToDo を作成する"
 )
 def create_todo(todo: ToDoCreate, repository: ToDoRepository = Depends(ToDoRepository)):
-    print(todo)
-    created_todo = repository.save(todo)
+    created_todo = repository.create(todo)
     return created_todo
+
+
+@todo_router.put(
+    "/{id}", response_model=ToDoRead, status_code=status.HTTP_200_OK, description="指定された ToDo を更新する"
+)
+def update_todo(id: str, todo: ToDoUpdate, repository: ToDoRepository = Depends(ToDoRepository)):
+    updated_todo = repository.update(id, todo)
+    return updated_todo
 
 
 @todo_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, description="指定された ToDo を削除する")
