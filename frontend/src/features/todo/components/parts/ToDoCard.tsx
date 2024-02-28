@@ -1,5 +1,5 @@
 import { ToDo } from "@/src/features/todo/types";
-import { Card, CardBody, CardHeader, Heading, Text } from "@chakra-ui/react";
+import { Card, CardBody, CardFooter, CardHeader, Heading, Text } from "@chakra-ui/react";
 
 type Props = {
   todo: ToDo;
@@ -12,11 +12,17 @@ const ToDoCard = ({ todo }: Props) => {
         <Heading size="sm">{todo.title}</Heading>
       </CardHeader>
 
-      <CardBody>
-        <Text>{todo.description}</Text>
-        <Text>{todo.dueDate}</Text>
-        <Text>{todo.status}</Text>
-      </CardBody>
+      {todo.description && (
+        <CardBody>
+          <Text>{todo.description}</Text>
+        </CardBody>
+      )}
+
+      {todo.dueDate && (
+        <CardFooter>
+          <Text>{todo.dueDate}</Text>
+        </CardFooter>
+      )}
     </Card>
   );
 };

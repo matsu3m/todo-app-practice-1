@@ -1,8 +1,9 @@
 import ToDoLane from "@/src/features/todo/components/parts/ToDoLane";
 import { todoStatuses } from "@/src/features/todo/constants";
 import { ToDo } from "@/src/features/todo/types";
-import { Flex, Heading } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import CreateModal from "../parts/CreateModal";
 
 const ToDoPage = () => {
   const [todos, setTodos] = useState<ToDo[]>([]);
@@ -18,7 +19,8 @@ const ToDoPage = () => {
 
   return (
     <>
-      <Heading mb={6}>ToDo app</Heading>
+      <CreateModal setTodos={setTodos} />
+
       <Flex gap={6}>
         {Object.entries(todoStatuses).map(([statusId, statusDisplayName]) => (
           <ToDoLane
