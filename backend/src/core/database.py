@@ -4,7 +4,7 @@ import boto3
 from boto3.dynamodb.types import TypeDeserializer, TypeSerializer
 from fastapi import Depends
 
-from src.config import Settings, get_settings
+from src.core.config import Settings, get_settings
 
 serializer = TypeSerializer()
 deserializer = TypeDeserializer()

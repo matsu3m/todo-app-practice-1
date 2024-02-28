@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 interface Todo {
   id: string;
   title: string;
-  content: string;
+  description: string;
   dueDate: string;
   status: "pending" | "completed";
 }
@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchTodos = async () => {
-      const response = await fetch("/api/todos");
+      const response = await fetch("/api/todos/");
       const data = await response.json();
       setTodos(data);
     };
@@ -27,7 +27,7 @@ const App = () => {
       {todos.map((todo) => (
         <div key={todo.id}>
           <h2>{todo.title}</h2>
-          <p>{todo.content}</p>
+          <p>{todo.description}</p>
           <p>{todo.dueDate}</p>
           <p>{todo.status}</p>
         </div>
