@@ -1,39 +1,7 @@
-import { Heading } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-
-interface Todo {
-  id: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  status: "pending" | "completed";
-}
+import ToDoPage from "./features/todo/components/pages/ToDoPage";
 
 const App = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-
-  useEffect(() => {
-    const fetchTodos = async () => {
-      const response = await fetch("/api/todos/");
-      const data = await response.json();
-      setTodos(data);
-    };
-    fetchTodos();
-  }, []);
-
-  return (
-    <>
-      <Heading>ToDo app</Heading>
-      {todos.map((todo) => (
-        <div key={todo.id}>
-          <h2>{todo.title}</h2>
-          <p>{todo.description}</p>
-          <p>{todo.dueDate}</p>
-          <p>{todo.status}</p>
-        </div>
-      ))}
-    </>
-  );
+  return <ToDoPage />;
 };
 
 export default App;
