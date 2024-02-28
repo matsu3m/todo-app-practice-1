@@ -6,9 +6,10 @@ type Props = {
   statusId: string;
   statusDisplayName: string;
   todos: ToDo[];
+  setTodos: React.Dispatch<React.SetStateAction<ToDo[]>>;
 };
 
-const ToDoLane = ({ statusId, statusDisplayName, todos }: Props) => {
+const ToDoLane = ({ statusId, statusDisplayName, todos, setTodos }: Props) => {
   return (
     <Card id={statusId} backgroundColor="gray.50">
       <CardHeader>
@@ -17,7 +18,7 @@ const ToDoLane = ({ statusId, statusDisplayName, todos }: Props) => {
 
       <CardBody>
         {todos.map((todo) => (
-          <ToDoCard key={todo.id} todo={todo} />
+          <ToDoCard key={todo.id} todo={todo} setTodos={setTodos} />
         ))}
       </CardBody>
     </Card>
