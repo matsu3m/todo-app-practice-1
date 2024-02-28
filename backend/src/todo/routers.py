@@ -23,3 +23,9 @@ def create_todo(todo: ToDoCreate, repository: ToDoRepository = Depends(ToDoRepos
     print(todo)
     created_todo = repository.save(todo)
     return created_todo
+
+
+@todo_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, description="指定された ToDo を削除する")
+def delete_todo(id: str, repository: ToDoRepository = Depends(ToDoRepository)):
+    repository.delete(id)
+    return

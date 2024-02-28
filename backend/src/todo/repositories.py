@@ -21,10 +21,8 @@ class ToDoRepository:
     def save(self, todo: ToDoCreate):
         id = str(uuid.uuid4())
         item = {"id": id, **todo.model_dump()}
-        print(item)
-
         self.db_client.put_item(TableName=self.table_name, Item=serialize_item(item))
         return item
 
-    def delete(self):
-        return
+    def delete(self, id: str):
+        self.db_client.delete_item(TableName=self.table_name, Key={"id": {"S": id}})
