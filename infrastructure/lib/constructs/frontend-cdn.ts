@@ -15,10 +15,21 @@ export class FrontendCdn extends Construct {
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
 
+    const apiGatewayOriginRequestPolicy = new aws_cloudfront.OriginRequestPolicy(
+      this,
+      "ApiGatewayOriginRequestPolicy",
+      {
+        cookieBehavior: aws_cloudfront.OriginRequestCookieBehavior.allowList(
+          "CognitoIdentityServiceProvider.*.idToken",
+        ),
+      },
+    );
+
     const additionalBehaviors: aws_cloudfront.BehaviorOptions = {
       origin: new aws_cloudfront_origins.RestApiOrigin(props.backendApi.apiGateway, { originPath: "" }),
       allowedMethods: aws_cloudfront.AllowedMethods.ALLOW_ALL,
       cachePolicy: aws_cloudfront.CachePolicy.CACHING_DISABLED,
+      originRequestPolicy: apiGatewayOriginRequestPolicy,
       viewerProtocolPolicy: aws_cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       edgeLambdas: [
         {
