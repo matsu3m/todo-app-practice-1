@@ -8,7 +8,8 @@ export class DbTable extends Construct {
     super(scope, id);
 
     this.table = new aws_dynamodb.Table(this, "Table", {
-      partitionKey: { name: "id", type: aws_dynamodb.AttributeType.STRING },
+      partitionKey: { name: "user_id", type: aws_dynamodb.AttributeType.STRING },
+      sortKey: { name: "id", type: aws_dynamodb.AttributeType.STRING },
       billingMode: aws_dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: RemovalPolicy.DESTROY, // テスト用
     });
