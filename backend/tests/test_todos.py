@@ -22,11 +22,16 @@ def setup_db():
         TableName=table_name,
         KeySchema=[
             {
-                "AttributeName": "id",
+                "AttributeName": "user_id",
                 "KeyType": "HASH",
+            },
+            {
+                "AttributeName": "id",
+                "KeyType": "RANGE",
             },
         ],
         AttributeDefinitions=[
+            {"AttributeName": "user_id", "AttributeType": "S"},
             {"AttributeName": "id", "AttributeType": "S"},
         ],
         ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
@@ -38,11 +43,19 @@ def setup_db():
     test_db_client.delete_table(TableName=table_name)
 
 
-def add_todo_item(id: str, title: str, description: str, due_date: str, status: str):
+def add_todo_item(
+    todo_id: str,
+    title: str,
+    description: str,
+    due_date: str,
+    status: str,
+    user_id: str = "local-user",
+):
     test_db_client.put_item(
         TableName=table_name,
         Item={
-            "id": {"S": id},
+            "user_id": {"S": user_id},
+            "id": {"S": todo_id},
             "title": {"S": title},
             "description": {"S": description},
             "due_date": {"S": due_date},
@@ -52,7 +65,7 @@ def add_todo_item(id: str, title: str, description: str, due_date: str, status: 
 
 
 class TestGetAllTodos:
-    def test_全てのToDoが取得される(self):
+    def test_自身のToDoが全て取得され他ユーザのToDoは取得されない(self):
         expected_response_payload = [
             {
                 "id": "1",
@@ -87,11 +100,15 @@ class TestGetAllTodos:
         for item in expected_response_payload:
             add_todo_item(item["id"], item["title"], item["description"], item["dueDate"], item["status"])
 
+        add_todo_item("5", "ToDo 5", "Description 5", "2023-01-05", "completed", "other-user")
+
         response = client.get("/todos")
         response_payload = response.json()
 
         assert response.status_code == 200
         assert len(response_payload) == 4
+        for item in expected_response_payload:
+            assert item in response_payload
 
 
 class TestCreateToDo:
@@ -106,11 +123,12 @@ class TestCreateToDo:
         response = client.post("/todos", json=request_payload)
         response_payload = response.json()
 
-        inserted_todo = test_db_client.get_item(TableName=table_name, Key={"id": {"S": response_payload["id"]}}).get(
-            "Item"
-        )
+        inserted_todo = test_db_client.get_item(
+            TableName=table_name, Key={"user_id": {"S": "local-user"}, "id": {"S": response_payload["id"]}}
+        ).get("Item")
 
         assert response.status_code == 201
+        assert response_payload["id"] == inserted_todo.get("id", {}).get("S", "")
         assert request_payload["title"] == response_payload["title"] == inserted_todo.get("title", {}).get("S", "")
         assert (
             request_payload["description"]
@@ -137,7 +155,9 @@ class TestUpdateTodo:
         response = client.put("/todos/1", json=request_payload)
         response_payload = response.json()
 
-        updated_todo = test_db_client.get_item(TableName=table_name, Key={"id": {"S": "1"}}).get("Item")
+        updated_todo = test_db_client.get_item(
+            TableName=table_name, Key={"user_id": {"S": "local-user"}, "id": {"S": "1"}}
+        ).get("Item")
 
         assert response.status_code == 200
         assert request_payload["title"] == response_payload["title"] == updated_todo.get("title", {}).get("S", "")
@@ -159,4 +179,9 @@ class TestDeleteToDo:
         response = client.delete("/todos/1")
 
         assert response.status_code == 204
-        assert test_db_client.get_item(TableName=table_name, Key={"id": {"S": "1"}}).get("Item") is None
+        assert (
+            test_db_client.get_item(TableName=table_name, Key={"user_id": {"S": "local-user"}, "id": {"S": "1"}}).get(
+                "Item"
+            )
+            is None
+        )
