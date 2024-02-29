@@ -25,10 +25,13 @@ def get_current_user(request: Request, settings: Settings = Depends(get_settings
     try:
         decoded_token = jwt.decode(
             jwt_token,
-            key=settings.cognito_public_key,
+            key="dummy",
             algorithms=["RS256"],
-            audience=settings.cognito_user_pool_client_id,
-            options={"verify_signature": True, "verify_at_hash": False},
+            options={
+                "verify_aud": False,
+                "verify_at_hash": False,
+                "verify_signature": False,
+            },  # TODO: 前段の Lambda Edge で検証済みとはいえ、検証する方が良い
         )
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid token")
