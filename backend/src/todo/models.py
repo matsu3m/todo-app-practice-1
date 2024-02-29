@@ -30,3 +30,7 @@ class ToDoUpdate(BaseSchema):
     description: str = Field(description="todo の詳細")
     due_date: str = Field(description="todo の期日")
     status: Literal["backlog", "upcoming", "inProgress", "completed"] = Field(description="todo のステータス")
+
+
+class Detail(BaseModel):
+    detail: str
