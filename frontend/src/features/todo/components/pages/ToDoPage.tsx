@@ -1,10 +1,9 @@
-import ToDoLane from "@/src/features/todo/components/parts/ToDoLane";
-import { todoStatuses } from "@/src/features/todo/constants";
 import { ToDo } from "@/src/features/todo/types";
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CreateModal from "../parts/CreateModal";
 import SearchBox from "../parts/SearchBox";
+import ToDoBoard from "../parts/ToDoBoard";
 
 const ToDoPage = () => {
   const [todos, setTodos] = useState<ToDo[]>([]);
@@ -26,17 +25,7 @@ const ToDoPage = () => {
         <SearchBox todos={todos} setFilteredTodos={setFilteredTodos} />
       </Flex>
 
-      <Flex gap={6}>
-        {Object.entries(todoStatuses).map(([statusId, statusDisplayName]) => (
-          <ToDoLane
-            key={statusId}
-            statusId={statusId}
-            statusDisplayName={statusDisplayName}
-            todos={filteredTodos.filter((todo) => todo.status === statusId)}
-            setTodos={setTodos}
-          />
-        ))}
-      </Flex>
+      <ToDoBoard todos={filteredTodos} setTodos={setTodos} />
     </>
   );
 };
