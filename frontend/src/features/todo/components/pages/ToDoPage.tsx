@@ -4,9 +4,11 @@ import { ToDo } from "@/src/features/todo/types";
 import { Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import CreateModal from "../parts/CreateModal";
+import SearchBox from "../parts/SearchBox";
 
 const ToDoPage = () => {
   const [todos, setTodos] = useState<ToDo[]>([]);
+  const [filteredTodos, setFilteredTodos] = useState<ToDo[]>([]);
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -19,7 +21,10 @@ const ToDoPage = () => {
 
   return (
     <>
-      <CreateModal setTodos={setTodos} />
+      <Flex>
+        <CreateModal setTodos={setTodos} />
+        <SearchBox todos={todos} setFilteredTodos={setFilteredTodos} />
+      </Flex>
 
       <Flex gap={6}>
         {Object.entries(todoStatuses).map(([statusId, statusDisplayName]) => (
@@ -27,7 +32,7 @@ const ToDoPage = () => {
             key={statusId}
             statusId={statusId}
             statusDisplayName={statusDisplayName}
-            todos={todos.filter((todo) => todo.status === statusId)}
+            todos={filteredTodos.filter((todo) => todo.status === statusId)}
             setTodos={setTodos}
           />
         ))}
