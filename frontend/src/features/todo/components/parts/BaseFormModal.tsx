@@ -1,5 +1,5 @@
 import { todoStatuses } from "@/src/features/todo/constants";
-import { ToDo, ToDoFormInput, ToDoUpdate } from "@/src/features/todo/types";
+import { ToDo, ToDoFormInput } from "@/src/features/todo/types";
 import {
   Box,
   Button,
@@ -29,11 +29,19 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: ToDoFormInput) => Promise<void>;
-  defaultValues?: Partial<ToDoUpdate>;
   isSubmitting: boolean;
 };
 
-const TodoFormModal = ({ todo, setTodos, isOpen, onClose, onSubmit, defaultValues, isSubmitting }: Props) => {
+const TodoFormModal = ({ todo, setTodos, isOpen, onClose, onSubmit, isSubmitting }: Props) => {
+  const defaultValues = todo
+    ? {
+        title: todo.title,
+        description: todo.description,
+        dueDate: todo.dueDate,
+        status: todo.status,
+      }
+    : undefined;
+
   const {
     register,
     handleSubmit,
@@ -42,10 +50,10 @@ const TodoFormModal = ({ todo, setTodos, isOpen, onClose, onSubmit, defaultValue
   } = useForm<ToDoFormInput>({ defaultValues });
 
   useEffect(() => {
-    if (!isOpen) {
-      reset();
+    if (isOpen) {
+      reset(todo);
     }
-  }, [isOpen, reset]);
+  }, [isOpen, todo, reset]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -72,7 +80,9 @@ const TodoFormModal = ({ todo, setTodos, isOpen, onClose, onSubmit, defaultValue
 
             <FormControl isInvalid={!!errors.description}>
               <FormLabel>内容</FormLabel>
-              <Textarea {...register("description")} />
+              <Textarea
+                {...register("description", { maxLength: { value: 1000, message: "1000文字以内で入力してください" } })}
+              />
               <FormErrorMessage>{errors.description?.message?.toString()}</FormErrorMessage>
             </FormControl>
 
@@ -104,9 +114,8 @@ const TodoFormModal = ({ todo, setTodos, isOpen, onClose, onSubmit, defaultValue
           <ModalFooter>
             <Flex width="100%" justifyContent="space-between">
               {todo && setTodos ? <DeleteModal todoId={todo.id} setTodos={setTodos} /> : <Box />}
-
               <Button isLoading={isSubmitting} type="submit" colorScheme="teal">
-                {defaultValues ? "更新" : "作成"}
+                {todo ? "更新" : "作成"}
               </Button>
             </Flex>
           </ModalFooter>

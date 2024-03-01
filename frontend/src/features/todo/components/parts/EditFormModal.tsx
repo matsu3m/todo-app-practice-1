@@ -19,7 +19,7 @@ const EditModal = ({ isOpen, onClose, todo, setTodos }: Props) => {
         ...data,
         id: todo.id,
       });
-      setTodos((prevTodos) => prevTodos.map((t) => (t.id === updatedTodo.id ? updatedTodo : t)));
+      setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo)));
       onClose();
     } catch (e) {
       console.error(e);
@@ -40,7 +40,6 @@ const EditModal = ({ isOpen, onClose, todo, setTodos }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         onSubmit={handleUpdate}
-        defaultValues={todo}
         isSubmitting={false}
       />
     </>
