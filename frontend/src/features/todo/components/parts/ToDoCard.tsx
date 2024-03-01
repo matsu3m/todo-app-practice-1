@@ -1,8 +1,8 @@
+import EditFormModal from "@/src/features/todo/components/parts/EditFormModal";
+import { ToDo } from "@/src/features/todo/types";
 import { Card, CardBody, CardFooter, CardHeader, Heading, Text, useDisclosure } from "@chakra-ui/react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ToDo } from "../../types";
-import EditFormModal from "./EditFormModal";
 
 type Props = {
   id: string;

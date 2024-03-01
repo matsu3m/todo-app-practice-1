@@ -1,3 +1,5 @@
+import { todoStatuses } from "@/src/features/todo/constants";
+import { ToDoFormInput, ToDoUpdate } from "@/src/features/todo/types";
 import {
   Button,
   FormControl,
@@ -17,8 +19,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { todoStatuses } from "../../constants";
-import { ToDoFormInput, ToDoUpdate } from "../../types";
 
 type Props = {
   isOpen: boolean;
