@@ -1,5 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import { DndContext, DragOverEvent, PointerSensor, closestCorners, useSensor, useSensors } from "@dnd-kit/core";
+import { updateTodo } from "../../api";
 import { todoStatuses } from "../../constants";
 import { ToDo, isToDoStatus } from "../../types";
 import ToDoLane from "./ToDoLane";
@@ -50,20 +51,15 @@ const ToDoBoard = ({ todos, setTodos }: Props) => {
     setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === activeId ? { ...todo, status: newStatus } : todo)));
 
     try {
-      await fetch(`/api/todos/${activeId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: activeTodo.title,
-          description: activeTodo.description,
-          dueDate: activeTodo.dueDate,
-          status: newStatus,
-        }),
+      await updateTodo({
+        id: activeId,
+        title: activeTodo.title,
+        description: activeTodo.description,
+        dueDate: activeTodo.dueDate,
+        status: newStatus,
       });
     } catch {
-      // エラーが発生した場合は元の状態に戻す
+      // 更新に失敗した場合は元の状態に戻す (update 完了後に setTodos を実行するのでは動作が遅いため)
       setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === activeId ? { ...todo, status: activeLane } : todo)));
     }
   };
