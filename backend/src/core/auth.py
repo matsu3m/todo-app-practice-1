@@ -1,6 +1,6 @@
 import re
 
-from fastapi import Depends, HTTPException, Request
+from fastapi import Depends, HTTPException, Request, status
 from jose import jwt
 
 from src.core.config import Settings, get_settings
@@ -13,7 +13,7 @@ def get_jwt_from_cookies(request: Request):
         if pattern.match(cookie_name):
             return cookie_value
 
-    raise HTTPException(status_code=401, detail="JWT token not found in cookies")
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="JWT token not found in cookies")
 
 
 def get_current_user(request: Request, settings: Settings = Depends(get_settings)):
@@ -34,11 +34,11 @@ def get_current_user(request: Request, settings: Settings = Depends(get_settings
             },  # TODO: 前段の Lambda Edge で検証済みとはいえ、検証する方が良い
         )
     except Exception:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
 
     user_id = decoded_token.get("sub")
 
     if user_id is None:
-        raise HTTPException(status_code=401, detail="User ID not found in the token")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User ID not found in the token")
 
     return user_id

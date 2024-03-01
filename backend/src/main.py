@@ -15,7 +15,7 @@ else:
 app.include_router(todo_router)
 
 
-@app.get("/health/")
+@app.get("/health/", include_in_schema=False)
 async def health_check():
     return {"status": "ok"}
 
