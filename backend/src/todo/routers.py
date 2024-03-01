@@ -1,9 +1,9 @@
-from typing import List
+from typing import Annotated, List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Path, status
 
 from src.core.auth import get_current_user
-from src.todo.exceptions import DatabasePermissionDeniedException, DatabasePrimaryKeyViolationException
+from src.todo.exceptions import DatabasePrimaryKeyViolationException
 from src.todo.repositories import ToDoRepository
 from src.todo.schemas import Detail, ToDoCreate, ToDoRead, ToDoUpdate
 
@@ -45,26 +45,37 @@ def create_todo(
     response_model=ToDoRead,
     status_code=status.HTTP_200_OK,
     description="自身が作成した ToDo を指定して更新する（すべての項目を上書き）",
-    responses={status.HTTP_403_FORBIDDEN: {"description": "Forbidden Error", "model": Detail}},
 )
 def update_todo(
-    todo_id: str,
+    todo_id: Annotated[
+        str,
+        Path(
+            description="ToDo の ID (UUID v4)",
+            pattern="^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        ),
+    ],
     todo: ToDoUpdate,
     user_id: str = Depends(get_current_user),
     repository: ToDoRepository = Depends(ToDoRepository),
 ):
-    try:
-        updated_todo = repository.upsert(user_id, todo_id, todo)
-        return updated_todo
-    except DatabasePermissionDeniedException:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Database permission denied")
+
+    updated_todo = repository.upsert(user_id, todo_id, todo)
+    return updated_todo
 
 
 @todo_router.delete(
     "/{todo_id}", status_code=status.HTTP_204_NO_CONTENT, description="自身が作成した ToDo を指定して削除する"
 )
 def delete_todo(
-    todo_id: str, user_id: str = Depends(get_current_user), repository: ToDoRepository = Depends(ToDoRepository)
+    todo_id: Annotated[
+        str,
+        Path(
+            description="ToDo の ID (UUID v4)",
+            pattern="^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        ),
+    ],
+    user_id: str = Depends(get_current_user),
+    repository: ToDoRepository = Depends(ToDoRepository),
 ):
     repository.delete(user_id, todo_id)
     return
