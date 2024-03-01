@@ -5,6 +5,7 @@ from mypy_boto3_dynamodb.client import DynamoDBClient
 
 from src.core.config import Settings, get_settings
 from src.core.database import deserialize_items, get_db_client, serialize_item
+from src.todo.exceptions import DatabasePermissionDeniedException, DatabasePrimaryKeyViolationException
 from src.todo.models import ToDoCreate, ToDoUpdate
 
 
@@ -31,8 +32,8 @@ class ToDoRepository:
                 TableName=self.table_name, Item=serialize_item(item), ConditionExpression="attribute_not_exists(id)"
             )  # 万が一 UUID が重複した場合は ConditionalCheckFailedException が発生する
             return item
-        except self.db_client.exceptions.ConditionalCheckFailedException:
-            raise Exception(f"Item with id {todo_id} already exists")
+        except self.db_client.exceptions.ConditionalCheckFailedException as e:
+            raise DatabasePrimaryKeyViolationException() from e
 
     def upsert(self, user_id: str, todo_id: str, todo: ToDoUpdate):
         item = {"user_id": user_id, "id": todo_id, **todo.model_dump()}
@@ -46,8 +47,8 @@ class ToDoRepository:
                     ":todo_id": {"S": todo_id},
                 },
             )  # TODO: PUT なので冪等性を持たせているが、新規作成時に UUID 以外の ID を指定されることになり、あまり良くない。PATCH に変えるべきか？
-        except self.db_client.exceptions.ConditionalCheckFailedException:
-            raise Exception(f"Item with user_id {user_id} and id {todo_id} does not exist")
+        except self.db_client.exceptions.ConditionalCheckFailedException as e:
+            raise DatabasePermissionDeniedException() from e
         return item
 
     def delete(self, user_id: str, todo_id: str):

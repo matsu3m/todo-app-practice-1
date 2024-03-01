@@ -1,8 +1,9 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.core.auth import get_current_user
+from src.todo.exceptions import DatabasePermissionDeniedException, DatabasePrimaryKeyViolationException
 from src.todo.models import Detail, ToDoCreate, ToDoRead, ToDoUpdate
 from src.todo.repositories import ToDoRepository
 
@@ -26,8 +27,11 @@ def get_all_todos(user_id: str = Depends(get_current_user), repository: ToDoRepo
 def create_todo(
     todo: ToDoCreate, user_id: str = Depends(get_current_user), repository: ToDoRepository = Depends(ToDoRepository)
 ):
-    created_todo = repository.create(user_id, todo)
-    return created_todo
+    try:
+        created_todo = repository.create(user_id, todo)
+        return created_todo
+    except DatabasePrimaryKeyViolationException:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Database primary key violation")
 
 
 @todo_router.put(
@@ -39,8 +43,11 @@ def update_todo(
     user_id: str = Depends(get_current_user),
     repository: ToDoRepository = Depends(ToDoRepository),
 ):
-    updated_todo = repository.upsert(user_id, todo_id, todo)
-    return updated_todo
+    try:
+        updated_todo = repository.upsert(user_id, todo_id, todo)
+        return updated_todo
+    except DatabasePermissionDeniedException:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Database permission denied")
 
 
 @todo_router.delete("/{todo_id}", status_code=status.HTTP_204_NO_CONTENT, description="指定された ToDo を削除する")
