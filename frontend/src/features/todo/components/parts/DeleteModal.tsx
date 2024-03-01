@@ -1,3 +1,5 @@
+import { deleteTodo } from "@/src/features/todo/api";
+import { ToDo } from "@/src/features/todo/types";
 import {
   Button,
   HStack,
@@ -11,8 +13,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { deleteTodo } from "../../api";
-import { ToDo } from "../../types";
 
 type Props = {
   todoId: string;

@@ -1,10 +1,10 @@
 import { getAllTodos } from "@/src/features/todo/api";
+import CreateFormModal from "@/src/features/todo/components/parts/CreateFormModal";
+import SearchBox from "@/src/features/todo/components/parts/SearchBox";
+import ToDoBoard from "@/src/features/todo/components/parts/ToDoBoard";
 import { ToDo } from "@/src/features/todo/types";
 import { Box, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
-import CreateFormModal from "../parts/CreateFormModal";
-import SearchBox from "../parts/SearchBox";
-import ToDoBoard from "../parts/ToDoBoard";
 
 const ToDoPage = () => {
   const [todos, setTodos] = useState<ToDo[]>([]);

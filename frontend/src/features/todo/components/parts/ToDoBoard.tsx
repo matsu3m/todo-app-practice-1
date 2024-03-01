@@ -1,9 +1,9 @@
+import { updateTodo } from "@/src/features/todo/api";
+import ToDoLane from "@/src/features/todo/components/parts/ToDoLane";
+import { todoStatuses } from "@/src/features/todo/constants";
+import { ToDo, isToDoStatus } from "@/src/features/todo/types";
 import { Flex } from "@chakra-ui/react";
 import { DndContext, DragOverEvent, PointerSensor, closestCorners, useSensor, useSensors } from "@dnd-kit/core";
-import { updateTodo } from "../../api";
-import { todoStatuses } from "../../constants";
-import { ToDo, isToDoStatus } from "../../types";
-import ToDoLane from "./ToDoLane";
 
 type Props = {
   todos: ToDo[];

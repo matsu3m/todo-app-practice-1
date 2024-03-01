@@ -1,7 +1,7 @@
+import { createTodo } from "@/src/features/todo/api";
+import BaseFormModal from "@/src/features/todo/components/parts/BaseFormModal";
+import { ToDo, ToDoFormInput } from "@/src/features/todo/types";
 import { Button, useDisclosure, useToast } from "@chakra-ui/react";
-import { createTodo } from "../../api";
-import { ToDo, ToDoFormInput } from "../../types";
-import BaseFormModal from "./BaseFormModal";
 
 type Props = {
   setTodos: React.Dispatch<React.SetStateAction<ToDo[]>>;

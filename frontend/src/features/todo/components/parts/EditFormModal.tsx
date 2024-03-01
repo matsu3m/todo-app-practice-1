@@ -1,7 +1,7 @@
+import { updateTodo } from "@/src/features/todo/api";
+import BaseFormModal from "@/src/features/todo/components/parts/BaseFormModal";
+import { ToDo, ToDoFormInput } from "@/src/features/todo/types";
 import { useToast } from "@chakra-ui/react";
-import { updateTodo } from "../../api";
-import { ToDo, ToDoFormInput } from "../../types";
-import BaseFormModal from "./BaseFormModal";
 
 type Props = {
   isOpen: boolean;

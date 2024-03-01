@@ -1,4 +1,4 @@
-import ToDoPage from "./features/todo/components/pages/ToDoPage";
+import ToDoPage from "@/src/features/todo/components/pages/ToDoPage";
 
 const App = () => {
   return <ToDoPage />;
