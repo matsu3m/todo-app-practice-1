@@ -16,6 +16,7 @@ import {
   Spacer,
   Textarea,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +36,8 @@ type FormData = {
 
 const CreateModal = ({ setTodos }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+
   const {
     register,
     handleSubmit,
@@ -43,17 +46,29 @@ const CreateModal = ({ setTodos }: Props) => {
   } = useForm<FormData>();
 
   const createToDo = async (data: FormData) => {
-    const response = await fetch("/api/todos/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const newTodo = await response.json();
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
-    onClose();
+    try {
+      const response = await fetch("/api/todos/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        throw new Error("Response is not ok");
+      }
+      const newTodo = await response.json();
+      setTodos((prevTodos) => [...prevTodos, newTodo]);
+      onClose();
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "ToDo の作成に失敗しました",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   useEffect(() => {
@@ -64,12 +79,14 @@ const CreateModal = ({ setTodos }: Props) => {
 
   return (
     <>
-      <Button onClick={onOpen}>＋ 追加</Button>
+      <Button onClick={onOpen} height={10} marginRight={5}>
+        ＋ 作成
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>ToDo の作成</ModalHeader>
+          <ModalHeader />
           <ModalCloseButton />
           <form onSubmit={handleSubmit(createToDo)}>
             <ModalBody>
@@ -85,7 +102,7 @@ const CreateModal = ({ setTodos }: Props) => {
                 <FormErrorMessage>{errors.title?.message?.toString()}</FormErrorMessage>
               </FormControl>
 
-              <Spacer h={4} />
+              <Spacer h={5} />
 
               <FormControl isInvalid={!!errors.description}>
                 <FormLabel>内容</FormLabel>
@@ -93,15 +110,15 @@ const CreateModal = ({ setTodos }: Props) => {
                 <FormErrorMessage>{errors.description?.message?.toString()}</FormErrorMessage>
               </FormControl>
 
-              <Spacer h={4} />
+              <Spacer h={5} />
 
               <FormControl isInvalid={!!errors.dueDate}>
-                <FormLabel>期限</FormLabel>
+                <FormLabel>期日</FormLabel>
                 <Input type="date" {...register("dueDate")} />
                 <FormErrorMessage>{errors.dueDate?.message?.toString()}</FormErrorMessage>
               </FormControl>
 
-              <Spacer h={4} />
+              <Spacer h={5} />
 
               <FormControl isInvalid={!!errors.status}>
                 <FormLabel>
@@ -123,9 +140,9 @@ const CreateModal = ({ setTodos }: Props) => {
             </ModalBody>
 
             <ModalFooter>
-              <HStack spacing={3}>
+              <HStack>
                 <Button isLoading={isSubmitting} type="submit">
-                  タスクを作成
+                  作成
                 </Button>
               </HStack>
             </ModalFooter>
