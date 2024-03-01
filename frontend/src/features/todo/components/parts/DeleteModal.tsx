@@ -42,7 +42,9 @@ const DeleteModal = ({ todoId, setTodos }: Props) => {
 
   return (
     <>
-      <Button onClick={onOpen}>削除</Button>
+      <Button onClick={onOpen} colorScheme="red">
+        削除
+      </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -53,7 +55,9 @@ const DeleteModal = ({ todoId, setTodos }: Props) => {
 
           <ModalFooter>
             <HStack>
-              <Button onClick={handleDelete}>削除</Button>
+              <Button onClick={handleDelete} colorScheme="red">
+                削除
+              </Button>
             </HStack>
           </ModalFooter>
         </ModalContent>

@@ -29,7 +29,7 @@ const CreateModal = ({ setTodos }: Props) => {
 
   return (
     <>
-      <Button onClick={onOpen} height={10} marginRight={5}>
+      <Button onClick={onOpen} height={10} marginRight={5} colorScheme="teal">
         ＋ 作成
       </Button>
 
