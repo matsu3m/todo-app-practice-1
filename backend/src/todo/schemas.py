@@ -21,7 +21,7 @@ class ToDoRead(BaseSchema):
 class ToDoCreate(BaseSchema):
     title: str = Field(description="ToDo のタイトル", min_length=1, max_length=100, examples=["ToDo title"])
     description: str = Field("", description="ToDo の詳細", max_length=1000, examples=["ToDo description"])
-    due_date: str = Field("", description="ToDo の期日", pattern="^\\d{4}-\\d{2}-\\d{2}$", examples=["2050-12-31"])
+    due_date: str = Field("", description="ToDo の期日", pattern="^(\\d{4}-\\d{2}-\\d{2})?$", examples=["2050-12-31"])
     status: Literal["backlog", "upcoming", "inProgress", "completed"] = Field(
         "backlog", description="ToDo のステータス", examples=["backlog"]
     )
@@ -30,7 +30,7 @@ class ToDoCreate(BaseSchema):
 class ToDoUpdate(BaseSchema):
     title: str = Field(description="ToDo のタイトル", min_length=1, max_length=100, examples=["ToDo title"])
     description: str = Field(description="ToDo の詳細", max_length=1000, examples=["ToDo description"])
-    due_date: str = Field(description="ToDo の期日", pattern="^\\d{4}-\\d{2}-\\d{2}$", examples=["2050-12-31"])
+    due_date: str = Field(description="ToDo の期日", pattern="^(\\d{4}-\\d{2}-\\d{2})?$", examples=["2050-12-31"])
     status: Literal["backlog", "upcoming", "inProgress", "completed"] = Field(
         description="ToDo のステータス", examples=["backlog"]
     )
