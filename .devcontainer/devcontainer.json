@@ -27,6 +27,7 @@
         "ms-azuretools.vscode-docker",
         "ms-python.black-formatter",
         "njpwerner.autodocstring",
+        "ryanluker.vscode-coverage-gutters",
         "streetsidesoftware.code-spell-checker"
       ],
       "settings": {
@@ -64,7 +65,10 @@
         "black-formatter.args": ["--line-length", "120"],
         "python.analysis.extraPaths": ["backend"],
         "python.analysis.typeCheckingMode": "basic",
-        "python.defaultInterpreterPath": "backend/.venv/bin/python"
+        "python.defaultInterpreterPath": "backend/.venv/bin/python",
+        "coverage-gutters.showLineCoverage": true,
+        "coverage-gutters.showRulerCoverage": true,
+        "coverage-gutters.coverageFileNames": [".pytest_cache/coverage.xml"],
       }
     }
   }
