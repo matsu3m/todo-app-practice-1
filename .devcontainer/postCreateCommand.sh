@@ -1,10 +1,18 @@
 #/bin/bash
 
-sudo chown vscode ./node_modules ./frontend/node_modules ./backend/.venv
+sudo chown vscode ./node_modules ./frontend/node_modules ./infrastructure/node_modules ./auth/node_modules ./backend/.venv
 
 npm install
 
 cd ./frontend
+npm install
+cd ..
+
+cd ./infrastructure
+npm install
+cd ..
+
+cd ./auth
 npm install
 cd ..
 
