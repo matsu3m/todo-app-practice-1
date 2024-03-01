@@ -1,39 +1,46 @@
+import { getAllTodos } from "@/src/features/todo/api";
 import { ToDo } from "@/src/features/todo/types";
 import { Box, Flex, Heading, useToast } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CreateModal from "../parts/CreateModal";
 import SearchBox from "../parts/SearchBox";
 import ToDoBoard from "../parts/ToDoBoard";
 
 const ToDoPage = () => {
   const [todos, setTodos] = useState<ToDo[]>([]);
-  const [filteredTodos, setFilteredTodos] = useState<ToDo[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toast = useToast();
+
+  const filteredTodos = useMemo(() => {
+    return todos.filter(
+      (todo) =>
+        todo.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        todo.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
+  }, [todos, searchQuery]);
 
   useEffect(() => {
     const abortController = new AbortController();
 
-    const getAllTodos = async () => {
+    const fetchTodos = async () => {
       try {
-        const response = await fetch("/api/todos/", { signal: abortController.signal });
-        if (!response.ok) {
-          throw new Error("Response is not ok");
-        }
-        const data: ToDo[] = await response.json();
+        const data = await getAllTodos(abortController.signal);
         setTodos(data);
       } catch (e) {
-        console.error(e);
-        toast({
-          title: "ToDo の取得に失敗しました",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+        if (!(e instanceof DOMException)) {
+          console.error(e);
+          toast({
+            title: "ToDo の取得に失敗しました",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
       }
     };
 
-    getAllTodos();
+    fetchTodos();
 
     return () => {
       abortController.abort();
@@ -49,7 +56,7 @@ const ToDoPage = () => {
           </Heading>
           <Flex>
             <CreateModal setTodos={setTodos} />
-            <SearchBox todos={todos} setFilteredTodos={setFilteredTodos} />
+            <SearchBox setSearchQuery={setSearchQuery} />
           </Flex>
         </Flex>
 
