@@ -1,15 +1,15 @@
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Button,
   HStack,
-  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
+  ModalHeader,
   ModalOverlay,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { ToDo } from "../../types";
 
@@ -20,28 +20,43 @@ type Props = {
 
 const DeleteModal = ({ todoId, setTodos }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const deleteTodo = async () => {
-    await fetch(`/api/todos/${todoId}`, {
-      method: "DELETE",
-    });
-
-    setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== todoId));
-    onClose();
+    try {
+      const response = await fetch(`/api/todos/${todoId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Response is not ok");
+      }
+      setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== todoId));
+      onClose();
+    } catch (e) {
+      console.error(e);
+      toast({
+        title: "ToDo の削除に失敗しました",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+      onClose();
+    }
   };
 
   return (
     <>
-      <IconButton aria-label="Delete ToDo" variant="outline" color="red" icon={<DeleteIcon />} onClick={onOpen} />
+      <Button onClick={onOpen}>削除</Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
+          <ModalHeader />
           <ModalCloseButton />
           <ModalBody>削除してもよろしいですか？</ModalBody>
 
           <ModalFooter>
-            <HStack spacing={3}>
+            <HStack>
               <Button onClick={deleteTodo}>削除</Button>
             </HStack>
           </ModalFooter>

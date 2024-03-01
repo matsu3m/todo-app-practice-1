@@ -1,3 +1,4 @@
+import { Flex } from "@chakra-ui/react";
 import { DndContext, DragOverEvent, PointerSensor, closestCorners, useSensor, useSensors } from "@dnd-kit/core";
 import { todoStatuses } from "../../constants";
 import { ToDo, isToDoStatus } from "../../types";
@@ -72,7 +73,7 @@ const ToDoBoard = ({ todos, setTodos }: Props) => {
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCorners} onDragOver={handleDragOver}>
-      <div style={{ display: "flex", flexDirection: "row", padding: "20px" }}>
+      <Flex justifyContent="space-between">
         {lanes.map((lane) => (
           <ToDoLane
             key={lane.id}
@@ -82,7 +83,7 @@ const ToDoBoard = ({ todos, setTodos }: Props) => {
             setTodos={setTodos}
           />
         ))}
-      </div>
+      </Flex>
     </DndContext>
   );
 };

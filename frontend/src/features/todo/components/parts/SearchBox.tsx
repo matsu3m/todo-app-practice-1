@@ -24,10 +24,10 @@ const SearchBox = ({ todos, setFilteredTodos }: Props) => {
   }, [searchQuery, todos, setFilteredTodos]);
 
   return (
-    <Flex alignItems="center" marginBottom={6} padding={2} gap={2} border="gray.100" borderWidth={1}>
+    <Flex alignItems="center" height={10} padding={2} gap={2} borderRadius={8} border="gray.100" borderWidth={1}>
       <SearchIcon />
       <Input
-        placeholder="Search for todos..."
+        placeholder="キーワード検索"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         variant="unstyled"
