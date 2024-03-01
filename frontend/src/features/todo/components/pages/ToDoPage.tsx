@@ -2,7 +2,7 @@ import { getAllTodos } from "@/src/features/todo/api";
 import { ToDo } from "@/src/features/todo/types";
 import { Box, Flex, Heading, useToast } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
-import CreateModal from "../parts/CreateModal";
+import CreateFormModal from "../parts/CreateFormModal";
 import SearchBox from "../parts/SearchBox";
 import ToDoBoard from "../parts/ToDoBoard";
 
@@ -55,7 +55,7 @@ const ToDoPage = () => {
             ToDo APP
           </Heading>
           <Flex>
-            <CreateModal setTodos={setTodos} />
+            <CreateFormModal setTodos={setTodos} />
             <SearchBox setSearchQuery={setSearchQuery} />
           </Flex>
         </Flex>

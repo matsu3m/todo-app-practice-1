@@ -11,3 +11,25 @@ export type ToDo = {
   dueDate: string;
   status: ToDoStatus;
 };
+
+export type ToDoCreate = {
+  title: string;
+  description: string;
+  dueDate: string;
+  status: ToDoStatus;
+};
+
+export type ToDoUpdate = {
+  id: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  status: ToDoStatus;
+};
+
+export type ToDoFormInput = {
+  title: string;
+  description: string;
+  dueDate: string;
+  status: ToDoStatus;
+};
