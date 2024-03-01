@@ -1,7 +1,9 @@
 name: Publish API documentation
 
 on:
-  push: # TODO: 最終的には main ブランチへのプッシュ時に限定する。併せて、Settings > Environments > Deployment branches and tags にて、main ブランチからのみデプロイできるようにする。
+  push:
+    branches:
+      - main
 
 jobs:
   build:
