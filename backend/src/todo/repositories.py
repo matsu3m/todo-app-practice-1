@@ -6,7 +6,7 @@ from mypy_boto3_dynamodb.client import DynamoDBClient
 from src.core.config import Settings, get_settings
 from src.core.database import deserialize_items, get_db_client, serialize_item
 from src.todo.exceptions import DatabasePermissionDeniedException, DatabasePrimaryKeyViolationException
-from src.todo.models import ToDoCreate, ToDoUpdate
+from src.todo.schemas import ToDoCreate, ToDoUpdate
 
 
 class ToDoRepository:

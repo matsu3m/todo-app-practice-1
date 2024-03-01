@@ -87,9 +87,7 @@ const TodoFormModal = ({ todo, setTodos, isOpen, onClose, onSubmit, defaultValue
             <Spacer h={5} />
 
             <FormControl isInvalid={!!errors.status}>
-              <FormLabel>
-                ステータス <span style={{ color: "red" }}>*</span>
-              </FormLabel>
+              <FormLabel>ステータス</FormLabel>
               <Select {...register("status")}>
                 {Object.entries(todoStatuses).map(([statusId, statusDisplayName]) => (
                   <option key={statusId} value={statusId}>
