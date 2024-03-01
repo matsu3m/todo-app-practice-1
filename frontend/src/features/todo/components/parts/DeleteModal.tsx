@@ -11,6 +11,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { deleteTodo } from "../../api";
 import { ToDo } from "../../types";
 
 type Props = {
@@ -22,14 +23,9 @@ const DeleteModal = ({ todoId, setTodos }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
-  const deleteTodo = async () => {
+  const handleDelete = async () => {
     try {
-      const response = await fetch(`/api/todos/${todoId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Response is not ok");
-      }
+      await deleteTodo(todoId);
       setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== todoId));
       onClose();
     } catch (e) {
@@ -57,7 +53,7 @@ const DeleteModal = ({ todoId, setTodos }: Props) => {
 
           <ModalFooter>
             <HStack>
-              <Button onClick={deleteTodo}>削除</Button>
+              <Button onClick={handleDelete}>削除</Button>
             </HStack>
           </ModalFooter>
         </ModalContent>
