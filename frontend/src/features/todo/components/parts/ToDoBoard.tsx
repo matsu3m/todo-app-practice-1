@@ -3,7 +3,7 @@ import ToDoLane from "@/src/features/todo/components/parts/ToDoLane";
 import { todoStatuses } from "@/src/features/todo/constants";
 import { ToDo, isToDoStatus } from "@/src/features/todo/types";
 import { Flex } from "@chakra-ui/react";
-import { DndContext, DragOverEvent, PointerSensor, closestCorners, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragOverEvent, PointerSensor, pointerWithin, useSensor, useSensors } from "@dnd-kit/core";
 
 type Props = {
   todos: ToDo[];
@@ -68,7 +68,7 @@ const ToDoBoard = ({ todos, setTodos }: Props) => {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 1 } }));
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCorners} onDragOver={handleDragOver}>
+    <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragOver={handleDragOver}>
       <Flex justifyContent="space-between">
         {lanes.map((lane) => (
           <ToDoLane
