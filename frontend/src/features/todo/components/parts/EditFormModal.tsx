@@ -35,6 +35,8 @@ const EditModal = ({ isOpen, onClose, todo, setTodos }: Props) => {
   return (
     <>
       <BaseFormModal
+        todo={todo}
+        setTodos={setTodos}
         isOpen={isOpen}
         onClose={onClose}
         onSubmit={handleUpdate}

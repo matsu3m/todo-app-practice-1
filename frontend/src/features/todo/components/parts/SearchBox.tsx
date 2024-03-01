@@ -6,7 +6,7 @@ type Props = {
 };
 const SearchBox = ({ setSearchQuery }: Props) => {
   return (
-    <Flex alignItems="center" height={10} padding={2} gap={2} borderRadius={8} borderColor="gray.100" borderWidth={1}>
+    <Flex alignItems="center" height={10} padding={2} gap={2} borderRadius={8} borderColor="gray.200" borderWidth={2}>
       <SearchIcon />
       <Input placeholder="キーワード検索" onChange={(e) => setSearchQuery(e.target.value)} variant="unstyled" />
     </Flex>

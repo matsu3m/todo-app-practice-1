@@ -1,7 +1,9 @@
 import { todoStatuses } from "@/src/features/todo/constants";
-import { ToDoFormInput, ToDoUpdate } from "@/src/features/todo/types";
+import { ToDo, ToDoFormInput, ToDoUpdate } from "@/src/features/todo/types";
 import {
+  Box,
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -19,8 +21,11 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import DeleteModal from "./DeleteModal";
 
 type Props = {
+  todo?: ToDo;
+  setTodos?: React.Dispatch<React.SetStateAction<ToDo[]>>;
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: ToDoFormInput) => Promise<void>;
@@ -28,7 +33,7 @@ type Props = {
   isSubmitting: boolean;
 };
 
-const TodoFormModal = ({ isOpen, onClose, onSubmit, defaultValues, isSubmitting }: Props) => {
+const TodoFormModal = ({ todo, setTodos, isOpen, onClose, onSubmit, defaultValues, isSubmitting }: Props) => {
   const {
     register,
     handleSubmit,
@@ -97,9 +102,13 @@ const TodoFormModal = ({ isOpen, onClose, onSubmit, defaultValues, isSubmitting 
           </ModalBody>
 
           <ModalFooter>
-            <Button isLoading={isSubmitting} type="submit">
-              {defaultValues ? "更新" : "作成"}
-            </Button>
+            <Flex width="100%" justifyContent="space-between">
+              {todo && setTodos ? <DeleteModal todoId={todo.id} setTodos={setTodos} /> : <Box />}
+
+              <Button isLoading={isSubmitting} type="submit" colorScheme="teal">
+                {defaultValues ? "更新" : "作成"}
+              </Button>
+            </Flex>
           </ModalFooter>
         </form>
       </ModalContent>
