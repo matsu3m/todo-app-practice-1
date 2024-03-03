@@ -30,7 +30,7 @@ https://matsu3m.github.io/todo-app-practice-1/api-doc.html
 
 ### クラウドリソース管理
 
-AWS Cloud Development Kit
+- AWS Cloud Development Kit
 
 ## ローカル開発環境の構築手順
 
