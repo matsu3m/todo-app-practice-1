@@ -7,6 +7,7 @@ import { BackendApi } from "./backend-api";
 type Props = {
   backendApi: BackendApi;
   authLambda: AuthLambda;
+  apiKey: string;
 };
 
 export class FrontendCdn extends Construct {
@@ -26,7 +27,10 @@ export class FrontendCdn extends Construct {
     );
 
     const additionalBehaviors: aws_cloudfront.BehaviorOptions = {
-      origin: new aws_cloudfront_origins.RestApiOrigin(props.backendApi.apiGateway, { originPath: "" }),
+      origin: new aws_cloudfront_origins.RestApiOrigin(props.backendApi.apiGateway, {
+        originPath: "",
+        customHeaders: { Referer: props.apiKey },
+      }),
       allowedMethods: aws_cloudfront.AllowedMethods.ALLOW_ALL,
       cachePolicy: aws_cloudfront.CachePolicy.CACHING_DISABLED,
       originRequestPolicy: apiGatewayOriginRequestPolicy,
