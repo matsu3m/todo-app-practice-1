@@ -4,6 +4,9 @@
 
 https://matsu3m.github.io/todo-app-practice-1/api-doc.html
 
+## アーキテクチャ
+
+![](./docs/img/architecture.drawio.svg)
 
 ## ローカルの開発環境構築
 
@@ -29,9 +32,6 @@ https://matsu3m.github.io/todo-app-practice-1/api-doc.html
 
 1. `backend` に移動する。
 
-2. ターミナルで以下のコマンドを実行すると、tests フォルダ配下に存在するテストが実行される。
-    ```sh
-      poe test
-    ```
+2. `poe test` を実行すると、tests フォルダ配下に存在するテストが実行される。
 
 3. 左下の Watch をクリックすると、エディタ上でカバレッジを確認可能。
