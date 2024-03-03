@@ -23,6 +23,7 @@
         "charliermarsh.ruff",
         "eamodio.gitlens",
         "editorconfig.editorconfig",
+        "hediet.vscode-drawio",
         "KevinRose.vsc-python-indent",
         "ms-azuretools.vscode-docker",
         "ms-python.black-formatter",
@@ -68,7 +69,7 @@
         "python.defaultInterpreterPath": "backend/.venv/bin/python",
         "coverage-gutters.showLineCoverage": true,
         "coverage-gutters.showRulerCoverage": true,
-        "coverage-gutters.coverageFileNames": [".pytest_cache/coverage.xml"],
+        "coverage-gutters.coverageFileNames": [".pytest_cache/coverage.xml"]
       }
     }
   }
