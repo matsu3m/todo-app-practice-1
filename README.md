@@ -8,7 +8,31 @@ https://matsu3m.github.io/todo-app-practice-1/api-doc.html
 
 ![](./docs/img/architecture.drawio.svg)
 
-## ローカルの開発環境構築
+## 技術スタック
+
+### フロントエンド
+
+- TypeScript
+- React
+- Vite
+- Chakra UI
+
+### バックエンド
+
+- Python
+- FastAPI
+- Boto3
+- pytest
+
+### データベース
+
+- Amazon Dynamo DB
+
+### クラウドリソース管理
+
+AWS Cloud Development Kit
+
+## ローカル開発環境の構築手順
 
 ### 前提
 
